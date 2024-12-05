@@ -1,0 +1,53 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Function to simulate the FA
+bool simulateFA(const string& input) {
+    // Initial state
+    int state = 0;
+
+    // Process each character in the input string
+    for (char ch : input) {
+        switch (state) {
+            case 0: // q0
+                if (ch == '1') state = 1;
+                break;
+            case 1: // q1
+                if (ch == '1') state = 2;
+                else if (ch == '0') state = 0;
+                break;
+            case 2: // q2
+                if (ch == '1') state = 3;
+                else if (ch == '0') state = 0;
+                break;
+            case 3: // q3 (Accept state)
+                // Remain in q3 for both '0' and '1'
+                break;
+            default:
+                // Invalid state
+                return false;
+        }
+    }
+
+    // If the final state is q3, the string is accepted
+    return (state == 3);
+}
+
+int main() {
+    string input;
+
+    // Get input string from the user
+    cout << "Enter a binary string: ";
+    cin >> input;
+
+    // Simulate the FA
+    if (simulateFA(input)) {
+        cout << "The string is accepted (contains '111')." << endl;
+    } else {
+        cout << "The string is rejected (does not contain '111')." << endl;
+    }
+
+    return 0;
+}
