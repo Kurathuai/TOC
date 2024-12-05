@@ -1,0 +1,47 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Function to simulate the Turing Machine
+string incrementBinary(string input) {
+    input += "#"; // Append blank symbol
+    int head = input.length() - 2; // Start at the last bit
+    bool carry = true;
+
+    while (carry && head >= 0) {
+        if (input[head] == '0') {
+            input[head] = '1'; // Replace 0 with 1 and stop carry
+            carry = false;
+        } else if (input[head] == '1') {
+            input[head] = '0'; // Replace 1 with 0 and continue carry
+        }
+        head--;
+    }
+
+    // If carry is still true, prepend 1
+    if (carry) {
+        input = "1" + input;
+    }
+
+    // Remove the trailing blank symbol
+    input.pop_back();
+
+    return input;
+}
+
+int main() {
+    string input;
+
+    // Get binary number from the user
+    cout << "Enter a binary number: ";
+    cin >> input;
+
+    // Simulate the Turing Machine
+    string result = incrementBinary(input);
+
+    // Output the result
+    cout << "Incremented binary number: " << result << endl;
+
+    return 0;
+}
