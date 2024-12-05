@@ -1,0 +1,65 @@
+#include <iostream>
+#include <stack>
+#include <string>
+
+using namespace std;
+
+// Function to simulate the PDA
+bool simulatePDA(const string& input) {
+    stack<char> pdaStack; // Stack for PDA
+    int state = 0;        // Initial state: q0
+
+    for (char ch : input) {
+        if (state == 0) {
+            if (ch == 'a') {
+                // Push 'X' onto the stack for each 'a'
+                pdaStack.push('X');
+            } else if (ch == 'b') {
+                if (!pdaStack.empty()) {
+                    // Start reading 'b' and transition to q1
+                    pdaStack.pop();
+                    state = 1;
+                } else {
+                    // Invalid transition
+                    return false;
+                }
+            } else {
+                // Invalid character
+                return false;
+            }
+        } else if (state == 1) {
+            if (ch == 'b') {
+                if (!pdaStack.empty()) {
+                    // Continue popping for each 'b'
+                    pdaStack.pop();
+                } else {
+                    // Stack empty but more 'b's are present
+                    return false;
+                }
+            } else {
+                // Invalid character
+                return false;
+            }
+        }
+    }
+
+    // Accept if the stack is empty and all input is processed
+    return (state == 1 && pdaStack.empty());
+}
+
+int main() {
+    string input;
+
+    // Get input string from the user
+    cout << "Enter a string over {a, b}: ";
+    cin >> input;
+
+    // Simulate the PDA
+    if (simulatePDA(input)) {
+        cout << "The string is accepted (belongs to {a^n b^n | n > 0})." << endl;
+    } else {
+        cout << "The string is rejected (does not belong to {a^n b^n | n > 0})." << endl;
+    }
+
+    return 0;
+}
