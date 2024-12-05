@@ -1,0 +1,71 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+// Function to check if a string belongs to L1
+bool isInL1(const string& str) {
+    // Define the FA for L1
+    // Example: L1 = strings starting with 'a'
+    return !str.empty() && str[0] == 'a';
+}
+
+// Function to check if a string belongs to L2
+bool isInL2(const string& str) {
+    // Define the FA for L2
+    // Example: L2 = strings ending with 'b'
+    return !str.empty() && str.back() == 'b';
+}
+
+// Function to check the union of L1 and L2
+bool isInUnion(const string& str) {
+    return isInL1(str) || isInL2(str);
+}
+
+// Function to check the intersection of L1 and L2
+bool isInIntersection(const string& str) {
+    return isInL1(str) && isInL2(str);
+}
+
+// Function to check the concatenation of L1 and L2
+bool isInConcatenation(const string& str) {
+    int n = str.length();
+    for (int i = 1; i < n; ++i) {
+        string part1 = str.substr(0, i);
+        string part2 = str.substr(i);
+        if (isInL1(part1) && isInL2(part2)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int main() {
+    string input;
+
+    // Get input string from the user
+    cout << "Enter a string over {a, b}: ";
+    cin >> input;
+
+    // Simulate the operations
+    if (isInUnion(input)) {
+        cout << "The string is accepted by L1 ∪ L2 (Union)." << endl;
+    } else {
+        cout << "The string is rejected by L1 ∪ L2 (Union)." << endl;
+    }
+
+    if (isInIntersection(input)) {
+        cout << "The string is accepted by L1 ∩ L2 (Intersection)." << endl;
+    } else {
+        cout << "The string is rejected by L1 ∩ L2 (Intersection)." << endl;
+    }
+
+    if (isInConcatenation(input)) {
+        cout << "The string is accepted by L1L2 (Concatenation)." << endl;
+    } else {
+        cout << "The string is rejected by L1L2 (Concatenation)." << endl;
+    }
+
+    return 0;
+}
