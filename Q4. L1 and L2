@@ -1,0 +1,47 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Function to simulate the FA
+bool simulateFA(const string& input) {
+    int state = 0; // Initial state
+
+    for (char ch : input) {
+        switch (state) {
+            case 0: // q0
+                if (ch == 'a') state = 1;
+                else return false; // Invalid start
+                break;
+            case 1: // q1
+                if (ch == 'a' || ch == 'b') state = 2;
+                break;
+            case 2: // q2
+                if (ch == 'b') state = 3; // End of valid string
+                // Stay in q2 otherwise
+                break;
+            case 3: // q3 (accept state)
+                return false; // No transitions from accept state
+        }
+    }
+
+    // Accept if in q3
+    return (state == 3);
+}
+
+int main() {
+    string input;
+
+    // Get input string from the user
+    cout << "Enter a string over {a, b}: ";
+    cin >> input;
+
+    // Simulate the FA
+    if (simulateFA(input)) {
+        cout << "The string is accepted (belongs to L2 = a(a+b)*b)." << endl;
+    } else {
+        cout << "The string is rejected (does not belong to L2)." << endl;
+    }
+
+    return 0;
+}
