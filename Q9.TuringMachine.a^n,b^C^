@@ -1,0 +1,99 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+// Define tape, states, and symbols
+struct TuringMachine {
+    string tape;
+    int head;
+    string state;
+};
+
+// Move head left or right
+void moveHead(TuringMachine& tm, char direction) {
+    if (direction == 'R') {
+        tm.head++;
+    } else if (direction == 'L') {
+        tm.head--;
+    }
+
+    // Expand tape if head moves out of bounds
+    if (tm.head < 0) {
+        tm.tape = "#" + tm.tape;
+        tm.head = 0;
+    } else if (tm.head >= tm.tape.size()) {
+        tm.tape += "#";
+    }
+}
+
+// Process transition rules
+bool process(TuringMachine& tm) {
+    while (true) {
+        char current = tm.tape[tm.head];
+
+        // Define transitions
+        if (tm.state == "q0") {
+            if (current == 'a') {
+                tm.tape[tm.head] = 'X';
+                moveHead(tm, 'R');
+                tm.state = "q1";
+            } else if (current == '#') {
+                tm.state = "q4";
+            } else {
+                return false; // Reject
+            }
+        } else if (tm.state == "q1") {
+            if (current == 'b') {
+                tm.tape[tm.head] = 'Y';
+                moveHead(tm, 'R');
+                tm.state = "q2";
+            } else {
+                return false; // Reject
+            }
+        } else if (tm.state == "q2") {
+            if (current == 'c') {
+                tm.tape[tm.head] = 'Z';
+                moveHead(tm, 'L');
+                tm.state = "q3";
+            } else {
+                return false; // Reject
+            }
+        } else if (tm.state == "q3") {
+            if (current == 'X' || current == 'Y' || current == 'Z') {
+                moveHead(tm, 'L');
+            } else if (current == '#') {
+                moveHead(tm, 'R');
+                tm.state = "q0";
+            }
+        } else if (tm.state == "q4") {
+            if (current == 'X' || current == 'Y' || current == 'Z' || current == '#') {
+                moveHead(tm, 'R');
+            } else if (current == '#') {
+                return true; // Accept
+            } else {
+                return false; // Reject
+            }
+        }
+    }
+}
+
+int main() {
+    // Get input string
+    string input;
+    cout << "Enter a string (e.g., aaabbbccc): ";
+    cin >> input;
+
+    // Initialize Turing Machine
+    TuringMachine tm = {input + "#", 0, "q0"};
+
+    // Process the Turing Machine
+    if (process(tm)) {
+        cout << "The string is accepted by the Turing Machine." << endl;
+    } else {
+        cout << "The string is rejected by the Turing Machine." << endl;
+    }
+
+    return 0;
+}
