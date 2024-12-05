@@ -1,0 +1,59 @@
+#include <iostream>
+#include <stack>
+#include <string>
+
+using namespace std;
+
+// Function to simulate the PDA
+bool simulatePDA(const string& input) {
+    stack<char> pdaStack; // Stack for PDA
+    int state = 0;        // Initial state: q0
+
+    for (char ch : input) {
+        if (state == 0) {
+            if (ch == 'a' || ch == 'b') {
+                // Push 'a' or 'b' onto the stack
+                pdaStack.push(ch);
+            } else if (ch == 'X') {
+                // Transition to q2
+                state = 2;
+            } else {
+                // Invalid character
+                return false;
+            }
+        } else if (state == 2) {
+            if (ch == 'a' || ch == 'b') {
+                if (!pdaStack.empty() && pdaStack.top() == ch) {
+                    // Pop the stack if it matches
+                    pdaStack.pop();
+                } else {
+                    // Mismatch or empty stack
+                    return false;
+                }
+            } else {
+                // Invalid character
+                return false;
+            }
+        }
+    }
+
+    // Accept if stack is empty after processing w^r
+    return (state == 2 && pdaStack.empty());
+}
+
+int main() {
+    string input;
+
+    // Get input string from the user
+    cout << "Enter a string over {a, b} with 'X' as the separator: ";
+    cin >> input;
+
+    // Simulate the PDA
+    if (simulatePDA(input)) {
+        cout << "The string is accepted (belongs to {wXw^r})." << endl;
+    } else {
+        cout << "The string is rejected (does not belong to {wXw^r})." << endl;
+    }
+
+    return 0;
+}
