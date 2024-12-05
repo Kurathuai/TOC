@@ -1,0 +1,49 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Function to simulate the FA
+bool simulateFA(const string& input) {
+    // Initial state: q00
+    string state = "q00";
+
+    for (char ch : input) {
+        if (ch == 'a') {
+            // Transition on 'a'
+            if (state == "q00") state = "q10";
+            else if (state == "q01") state = "q11";
+            else if (state == "q10") state = "q00";
+            else if (state == "q11") state = "q01";
+        } else if (ch == 'b') {
+            // Transition on 'b'
+            if (state == "q00") state = "q01";
+            else if (state == "q01") state = "q00";
+            else if (state == "q10") state = "q11";
+            else if (state == "q11") state = "q10";
+        } else {
+            // Invalid character
+            return false;
+        }
+    }
+
+    // Accept if in q00
+    return (state == "q00");
+}
+
+int main() {
+    string input;
+
+    // Get input string from the user
+    cout << "Enter a string over {a, b}: ";
+    cin >> input;
+
+    // Simulate the FA
+    if (simulateFA(input)) {
+        cout << "The string is accepted (belongs to EVEN-EVEN)." << endl;
+    } else {
+        cout << "The string is rejected (does not belong to EVEN-EVEN)." << endl;
+    }
+
+    return 0;
+}
